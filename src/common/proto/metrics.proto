@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package metrics;
+
+service MetricsService {
+    rpc TestProxyConnection(ProxyConnectionId) returns (TestProxyConnectionOutput) {}
+    rpc TestHostConnection(HostConnectionId) returns (TestHostConnectionOutput) {}
+    rpc GetProxyUptime(ProxyUptimeInput) returns (ProxyUptimeOutput) {}
+    rpc GetProxyUptime(HostUptimeInput) returns (HostUptimeOutput) {}
+}
+
+// Get Proxy Uptime Stats
+message ProxyUptimeInput {
+    boolean all = 1;
+    google.protobuf.Timestamp from = 2;
+    google.protobuf.Timestamp to = 3;
+}
+
+message ProxyUptimeStats {
+    boolean id = 1;
+    double uptime_percentage = 2;
+    double inactivity_percentage = 3;
+}
+
+message ProxyUptimeOutput {
+    repeated ProxyUptimeStats proxy_stats = 1;
+}
+
+// Get Host Uptime Stats
+message HostUptimeInput {
+    boolean all = 1;
+    google.protobuf.Timestamp from = 2;
+    google.protobuf.Timestamp to = 3;
+}
+
+message HostUptimeStats {
+    boolean id = 1;
+    double uptime_percentage = 2;
+    double inactivity_percentage = 3;
+    string category = 4;
+}
+
+message HostUptimeOutput {
+    repeated HostUptimeStats host_stats = 1;
+}
+
+// Test Proxy Connection
+message ProxyConnectionId {
+    int32 id = 1;
+}
+
+message TestProxyConnectionOutput {
+    boolean status = 1;
+}
+
+// Test Host Connection
+message HostConnectionId {
+    int32 id = 1;
+}
+
+message TestHostConnectionOutput {
+    boolean status = 1;
+}

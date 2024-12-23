@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class MetricsService {
-    public async getMetricsForUptimeHost(from: Date, to: Date, all: boolean) {
+    public async getMetricsForUptimeHost(from: string, to: string, all: boolean) {
 
     }
 }

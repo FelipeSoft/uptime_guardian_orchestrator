@@ -16,5 +16,7 @@ describe('MetricsService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should request the correct service on ')
+  it('should returns the correct information structure regarding uptime host metrics', () => {
+    
+  });
 });

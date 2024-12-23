@@ -4,6 +4,7 @@ import { MetricsService } from './metrics.service';
 
 describe('MetricsController', () => {
   let controller: MetricsController;
+  let service: MetricsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -12,6 +13,7 @@ describe('MetricsController', () => {
     }).compile();
 
     controller = module.get<MetricsController>(MetricsController);
+    service = module.get<MetricsService>(MetricsService)
   });
 
   it('should be defined', () => {
@@ -59,20 +61,20 @@ describe('MetricsController', () => {
 
     expect(response.statusCode).toBe(422)
     expect(response.statusCode).toBe(422)
-  })
+  });
 
-  it('should returns an 422 status code if the param "all" is not a boolean value.', () => {
-    let allHostsBooleanValue = "123";
+  it('should returns an 422 status code if the param for host/proxy id is not a number value.', () => {
+    let hostOrProxyId = "abc";
     let response = {
       statusCode: 200,
       message: "ok",
     }
-    if (allHostsBooleanValue !== "true" && allHostsBooleanValue !== "false") {
+    if (isNaN(Number(hostOrProxyId))) {
       response = {
         statusCode: 422,
-        message: "invalid 'all' boolean param",
+        message: "invalid 'host/proxy id' number param",
       }
     }
     expect(response.statusCode).toBe(422)
-  })
+  });
 });

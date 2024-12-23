@@ -1,16 +1,25 @@
 import { Module } from '@nestjs/common';
 import { MetricsController } from './metrics.controller';
 import { MetricsService } from './metrics.service';
-import { AxiosService } from 'src/infrastructure/axios/axios.service';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
+    imports: [
+        ClientsModule.register([
+            {
+                name: 'METRICS_PACKAGE',
+                transport: Transport.GRPC,
+                options: {
+                    package: 'metrics',
+                    protoPath: './src/application/metrics/metrics.proto',
+                    url: process.env.METRICS_SERVICE_URL
+                },
+            },
+        ]),
+    ],
     controllers: [MetricsController],
     providers: [
-        MetricsService,
-        {
-            provide: "HttpClient",
-            useClass: AxiosService
-        }
+        MetricsService
     ]
 })
-export class MetricsModule {}
+export class MetricsModule { }

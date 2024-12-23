@@ -2,15 +2,111 @@ syntax = "proto3";
 
 package metrics;
 
+import "google/protobuf/timestamp.proto";
+
 service MetricsService {
-  rpc FindOne (HeroById) returns (Hero) {}
+    rpc TestProxyConnection(ProxyConnectionInput) returns (TestProxyConnectionOutput) {}
+    rpc TestHostConnection(HostConnectionInput) returns (TestHostConnectionOutput) {}
+    rpc GetProxyUptime(ProxyUptimeInput) returns (ProxyUptimeOutput) {}
+    rpc GetHostUptime(HostUptimeInput) returns (HostUptimeOutput) {}
+    rpc GetProxyLatency(ProxyLatencyInput) returns (ProxyLatencyOutput) {}
+    rpc GetHostLatency(HostLatencyInput) returns (HostLatencyOutput) {}
 }
 
-message HeroById {
-  int32 id = 1;
+// Get Proxy Latency Stats - /metrics/latency/proxy?from=datetime&to=datetime&all=boolean
+message ProxyLatencyInput {
+    int32 proxy_id = 1;
+    google.protobuf.Timestamp from = 2;
+    google.protobuf.Timestamp to = 3;
 }
 
-message Hero {
-  int32 id = 1;
-  string name = 2;
+message ProxyLatencyStats {
+    int32 proxy_id = 1;
+    double latency = 2;
+    google.protobuf.Timestamp time = 3;
+}
+
+message ProxyLatencyOutput {
+    repeated ProxyLatencyStats proxy_latency_stats = 1;
+}
+
+
+// Get Host Latency Stats - /metrics/latency/host?from=datetime&to=datetime&all=boolean
+message HostLatencyInput {
+    int32 host_id = 1;
+    google.protobuf.Timestamp from = 2;
+    google.protobuf.Timestamp to = 3;
+}
+
+message HostLatencyStats {
+    int32 host_id = 1;
+    double latency = 2;
+    google.protobuf.Timestamp time = 3;
+}
+
+message HostLatencyOutput {
+    repeated HostLatencyStats host_latency_stats = 1;
+}
+
+// Get Proxy Uptime Stats - /metrics/uptime/proxy?from=datetime&to=datetime&proxy=0(0 → all)
+message ProxyUptimeInput {
+    int32 proxy_id = 1;
+    google.protobuf.Timestamp from = 2;
+    google.protobuf.Timestamp to = 3;
+}
+
+message ProxyUptimeStats {
+    int32 proxy_id = 1;
+    double uptime_percentage = 2;
+    double inactivity_percentage = 3;
+}
+
+message ProxyUptimeOutput {
+    repeated ProxyUptimeStats proxy_uptime_stats = 1;
+}
+
+// Get Host Uptime Stats - /metrics/uptime/host?from=datetime&to=datetime&host=0(0 → all)
+message HostUptimeInput {
+    int32 host_id = 1;
+    google.protobuf.Timestamp from = 2;
+    google.protobuf.Timestamp to = 3;
+}
+
+message HostUptimeStats {
+    int32 host_id = 1;
+    double uptime_percentage = 2;
+    double inactivity_percentage = 3;
+    string category = 4;
+}
+
+message HostUptimeOutput {
+    repeated HostUptimeStats host_uptime_stats = 1;
+}
+
+// Test Proxy Connection - /uptime/test_connection/proxy
+message ProxyConnectionInput {
+    repeated int32 proxy_id = 1;
+}
+
+message ProxyConnectionStats {
+    int32 proxy_id = 1;
+    bool status = 2;
+}
+
+message TestProxyConnectionOutput {
+    repeated ProxyConnectionStats status = 1;
+}
+
+// Test Host Connection - /uptime/test_connection/host
+message HostConnectionInput {
+    repeated int32 host_id = 1;
+}
+
+message HostConnectionStats {
+    int32 host_id = 1;
+    bool status = 2;
+}
+
+message TestHostConnectionOutput {
+    repeated HostConnectionStats status = 1;
 }
